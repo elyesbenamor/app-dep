@@ -1,0 +1,35 @@
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    app: mongodb
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: mongo
+        resources : 
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 27017
+          name : mongoport
+        envFrom:
+          - configMapRef:
+              name: config
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongodb
+      volumes:
+      - name: mongodb
+        persistentVolumeClaim:
+          claimName: px-mongo-pvc
