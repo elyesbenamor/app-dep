@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    name: redis
+    app: redis-cashe
+spec:
+  selector:
+    matchLabels:
+      name: redis
+      app: worker
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: redis
+        app: worker
+    spec:
+      containers:
+      - name: master
+        image: redis:latest
+        resources:
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+          - name: redis
+            mountPath: /redis/data
+      volumes:
+        - name: redis
+          persistentVolumeClaim:
+            claimName: redis-claim
+
