@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-cron
+spec:
+  selector:
+    matchLabels:
+      app: app-cron
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app-cron
+    spec:
+      containers:
+        - name: app-cron
+          #image: add your image for worker 
+      resources: 
+        limits: 
+          cpu: 1
+          memory : "1000Mi"
+        requests: 
+          cpu: 1
+          memory: "500Mi" 
+        volumeMounts:
+            - mountPath: "/root"
+              name: cron-app
+      volumes:
+      - name: cron-app
+        persistentVolumeClaim:
+          claimName: px-mongo-pvc1
+      

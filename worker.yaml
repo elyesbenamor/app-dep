@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-worker
+spec:
+  selector:
+    matchLabels:
+      app: app-worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app-worker
+    spec:
+      containers:
+        - name: app-worker
+          #image: add your image for worker 
+      resources: 
+        limits: 
+          cpu: 1
+          memory : "1000Mi"
+        requests: 
+          cpu: 1
+          memory: "500Mi" 
+        volumeMounts:
+            - mountPath: "/root"
+              name: worker-app
+      volumes:
+      - name: worker-app
+        persistentVolumeClaim:
+          claimName: px-mongo-pvc1
+      
